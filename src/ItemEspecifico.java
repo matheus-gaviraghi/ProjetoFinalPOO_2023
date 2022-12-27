@@ -1,5 +1,6 @@
+import java.io.Serializable;
 
-public class ItemEspecifico extends Item {
+public class ItemEspecifico extends Item implements Serializable {
 	
 	protected double comprimento, largura, espessura;
 	protected String cor;

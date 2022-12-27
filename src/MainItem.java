@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.*;
 
-public class MainItem implements Serializable {
+public class MainItem{
 
     private static int codigo = 0;
 
@@ -33,6 +33,8 @@ public class MainItem implements Serializable {
 
             System.out.println(itens.get(0));
 
+            salvarArquivoTemporario(itens);
+
         } else if (tipoItem == 2){
             codigo++;
             System.out.println("Digite a descrição: ");
@@ -60,8 +62,50 @@ public class MainItem implements Serializable {
 
             System.out.println(itens.get(0));
 
+            salvarArquivoTemporario(itens);
+
+            ArrayList<Item> listaLida = lerArquivoTemporario();
+            System.out.println(listaLida.get(0));
+
         } else {
             System.out.println("Você digitou uma opção inválida!");
         }
     }
+
+    public static void salvarArquivoTemporario(ArrayList lista){
+        try{
+            FileOutputStream fileOut = new FileOutputStream("lista.tmp");
+            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+            objectOut.writeObject(lista);
+            objectOut.close();
+        } catch (FileNotFoundException e){
+            System.err.println("Arquivo não pode ser criado!");
+            e.printStackTrace();
+        } catch (IOException e){
+            System.err.println("Erro I/O!");
+            e.printStackTrace();
+        }
+        System.out.println("Arquivo salvo com sucesso!");
+    }
+
+    public static ArrayList<Item> lerArquivoTemporario(){
+        try{
+            FileInputStream fileInput = new FileInputStream("lista.tmp");
+            ObjectInputStream objectInput = new ObjectInputStream(fileInput);
+            ArrayList<Item> itens = (ArrayList<Item>) objectInput.readObject();
+            objectInput.close();
+            return itens;
+        } catch (FileNotFoundException e){
+            System.err.println("Arquivo não pode ser criado!");
+            e.printStackTrace();
+        } catch (ClassNotFoundException e){
+            System.err.println("Classe não encontrada!");
+            e.printStackTrace();
+        } catch (IOException e){
+            System.err.println("Erro I/O!");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
