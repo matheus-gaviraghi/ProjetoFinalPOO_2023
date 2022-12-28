@@ -33,7 +33,12 @@ public class MainItem{
 
             System.out.println(itens.get(0));
 
+            System.out.println("Salvando lista");
             salvarArquivoTemporario(itens);
+
+            System.out.println("Recuperando lista");
+            ArrayList<Item> listaLida = lerArquivoTemporario();
+            System.out.println(listaLida.get(0));
 
         } else if (tipoItem == 2){
             codigo++;
@@ -62,8 +67,10 @@ public class MainItem{
 
             System.out.println(itens.get(0));
 
+            System.out.println("Salvando lista");
             salvarArquivoTemporario(itens);
 
+            System.out.println("Recuperando lista");
             ArrayList<Item> listaLida = lerArquivoTemporario();
             System.out.println(listaLida.get(0));
 
