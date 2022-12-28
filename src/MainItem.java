@@ -1,82 +1,67 @@
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.*;
 
 public class MainItem{
 
-    private static int codigo = 0;
-
     public static void main(String[] args) {
        // declaração de variáveis e objetos utilizados na aplicação
         Scanner scanner = new Scanner(System.in);
-        ArrayList <Item> itens = new ArrayList<Item>();
+        // ArrayList <Item> itens = new ArrayList<Item>();
+
+        System.out.println("Bem vindo ao Controle de Estoque!");
+
+        String tipoItem = "";
+
+        do{
+            do {
+                System.out.println("Qual tipo de item você deseja cadastrar? 1-Item Normal OU 2-Item Específico");
+                tipoItem = scanner.nextLine();
+
+                if (!tipoItem.equals("1") && !tipoItem.equals("2")) {
+                    System.err.println("Você digitou uma opção inválida!");
+                }
+            } while(!tipoItem.equals("1") && !tipoItem.equals("2"));
 
 
-        System.out.println("Qual tipo de item você deseja cadastrar? 1-Item Normal OU 2-Item Específico");
-        int tipoItem = scanner.nextInt();
-        scanner.nextLine();
+            if(tipoItem.equals("1")){
+                System.out.println("Digite a descrição: ");
+                String descricao = scanner.nextLine();
+                System.out.println("Digite a quantidade: ");
+                int quantidade = scanner.nextInt();
+                scanner.nextLine();
 
-        if(tipoItem == 1){
-            codigo++;
-            System.out.println("Digite a descrição: ");
-            String descricao = scanner.nextLine();
-            System.out.println("Digite a quantidade: ");
-            int quantidade = scanner.nextInt();
-            System.out.println("Digite o preço unitário: ");
-            double precoUnitario = scanner.nextDouble();
+                Item novoItem = new Item(descricao, quantidade);
+                inserirItem(novoItem);
 
-            System.out.println("\nTamanho do ArrayList antes de criar o objeto: " + itens.size());
-            Item novoItem = new Item(codigo, descricao, quantidade, precoUnitario);
-            itens.add(novoItem);
-            System.out.println("Tamanho do ArrayList após criar o objeto e add: " + itens.size());
+            } else if (tipoItem.equals("2")){
+                System.out.println("Digite a descrição: ");
+                String descricao = scanner.nextLine();
+                System.out.println("Digite a quantidade: ");
+                int quantidade = scanner.nextInt();
+                System.out.println("Digite o preço unitário: ");
+                double precoUnitario = scanner.nextDouble();
+                System.out.println("Digite o comprimento: ");
+                double comprimento = scanner.nextDouble();
+                System.out.println("Digite a largura: ");
+                double largura = scanner.nextDouble();
+                System.out.println("Digite a espessura: ");
+                double espessura = scanner.nextDouble();
+                scanner.nextLine();
+                System.out.println("Digite a cor: ");
+                String cor = scanner.nextLine();
 
-            System.out.println(itens.get(0));
+                Item novoItem = new ItemEspecifico(0, descricao, quantidade, precoUnitario,
+                        comprimento, largura, espessura, cor);
 
-            System.out.println("Salvando lista");
-            salvarArquivoTemporario(itens);
-
-            System.out.println("Recuperando lista");
-            ArrayList<Item> listaLida = lerArquivoTemporario();
-            System.out.println(listaLida.get(0));
-
-        } else if (tipoItem == 2){
-            codigo++;
-            System.out.println("Digite a descrição: ");
-            String descricao = scanner.nextLine();
-            System.out.println("Digite a quantidade: ");
-            int quantidade = scanner.nextInt();
-            System.out.println("Digite o preço unitário: ");
-            double precoUnitario = scanner.nextDouble();
-            System.out.println("Digite o comprimento: ");
-            double comprimento = scanner.nextDouble();
-            System.out.println("Digite a largura: ");
-            double largura = scanner.nextDouble();
-            System.out.println("Digite a espessura: ");
-            double espessura = scanner.nextDouble();
-            scanner.nextLine();
-
-            System.out.println("Digite a cor: ");
-            String cor = scanner.nextLine();
-
-            System.out.println("\nTamanho do ArrayList antes de criar o objeto: " + itens.size());
-            Item novoItem = new ItemEspecifico(codigo, descricao, quantidade, precoUnitario,
-                                                                comprimento, largura, espessura, cor);
-            itens.add(novoItem);
-            System.out.println("Tamanho do ArrayList após criar o objeto e add: " + itens.size());
-
-            System.out.println(itens.get(0));
-
-            System.out.println("Salvando lista");
-            salvarArquivoTemporario(itens);
-
-            System.out.println("Recuperando lista");
-            ArrayList<Item> listaLida = lerArquivoTemporario();
-            System.out.println(listaLida.get(0));
-
-        } else {
-            System.out.println("Você digitou uma opção inválida!");
-        }
+                inserirItem(novoItem);
+            }
+            System.out.println("Deseja adicionar mais um item?[S,N]");
+            if(scanner.nextLine().toLowerCase().equals("n")){
+                mostrarItensLista(lerArquivoTemporario());
+                break;
+            }
+        } while(true);
     }
 
     public static void salvarArquivoTemporario(ArrayList lista){
@@ -103,16 +88,49 @@ public class MainItem{
             objectInput.close();
             return itens;
         } catch (FileNotFoundException e){
-            System.err.println("Arquivo não pode ser criado!");
-            e.printStackTrace();
+            System.err.println("Arquivo não existe!");
+            //e.printStackTrace();
         } catch (ClassNotFoundException e){
             System.err.println("Classe não encontrada!");
-            e.printStackTrace();
+            //e.printStackTrace();
         } catch (IOException e){
             System.err.println("Erro I/O!");
-            e.printStackTrace();
+            //e.printStackTrace();
         }
-        return null;
+        return new ArrayList<Item>();
     }
+
+    public static void mostrarItensLista(ArrayList<Item> lista){
+        for (Item item: lista) {
+            System.out.println(item);
+        }
+    }
+
+    public static void inserirItem(Item novoItem){
+
+        ArrayList<Item> lista = lerArquivoTemporario();
+
+        if(lista.isEmpty()){
+            System.out.println("Lista vazia!");
+            int codigoPrimeiroItem = 1;
+            novoItem.setCodigo(codigoPrimeiroItem);
+
+            lista.add(novoItem);
+
+            System.out.println("Primeiro item adicionado! Tamanho lista: " + lista.size());
+            salvarArquivoTemporario(lista);
+        } else {
+            int ultimoCodigo = lista.get(lista.size()-1).codigo;
+            System.out.println("Codigo ultimo elemento: " + ultimoCodigo);
+
+            novoItem.setCodigo(ultimoCodigo+1);
+            lista.add(novoItem);
+
+            System.out.printf("Item %d adicionado! Tamanho lista: %d", ultimoCodigo+1,lista.size());
+            System.out.println();
+            salvarArquivoTemporario(lista);
+        }
+    }
+
 
 }

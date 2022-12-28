@@ -17,9 +17,18 @@ public class Item implements Serializable {
         this.quantidade = quantidade;
     }
 
+    Item(String descricao, int quantidade){
+        this.descricao = descricao;
+        this.quantidade = quantidade;
+    }
+
     Item(int codigo, String descricao, int quantidade, double preco){
         this(codigo, descricao, quantidade);
         this.preco = preco;
+    }
+
+    public void setCodigo(int codigo){
+        this.codigo = codigo;
     }
 
     public int getCodigo(){
