@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.*;
 
-public class MainItem{
+public class DemoItem {
 
     public static void main(String[] args) {
        // declaração de variáveis e objetos utilizados na aplicação
