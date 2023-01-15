@@ -26,9 +26,13 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Tela_Aplicacao extends JFrame {
 
+	private static final long serialVersionUID = -1864335403553553587L;
+	
 	private JPanel contentPane;
 	private JTable tabelaItens;
 
@@ -93,6 +97,13 @@ public class Tela_Aplicacao extends JFrame {
 		
 		// definição do botão de edição de um determinado item
 		JButton buttonEditarItem = new JButton("Editar Item");
+		buttonEditarItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose(); // fecha a tela principal
+				Tela_EditarItem telaEdicao = new Tela_EditarItem();
+				telaEdicao.setVisible(true); // torna a tela de edicao visível
+			}
+		});
 		buttonEditarItem.setForeground(Color.WHITE);
 		buttonEditarItem.setFont(new Font("Times New Roman", Font.PLAIN, 16));
 		buttonEditarItem.setBackground(Color.GRAY);
@@ -197,7 +208,7 @@ public class Tela_Aplicacao extends JFrame {
             //e.printStackTrace();
         } catch (IOException e){
             System.err.println("Erro I/O!");
-            //e.printStackTrace();
+            e.printStackTrace();
         }
         return new ArrayList<Item>();
     }

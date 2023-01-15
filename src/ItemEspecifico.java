@@ -2,6 +2,8 @@ import java.io.Serializable;
 
 public class ItemEspecifico extends Item implements Serializable {
 	
+	private static final long serialVersionUID = 7500106824771378466L;
+	
 	protected double comprimento, largura, espessura;
 	protected String cor;
 	
@@ -11,23 +13,6 @@ public class ItemEspecifico extends Item implements Serializable {
 		this.largura = 0.0;
 		this.espessura = 0.0;
 		this.cor = "Não definida";
-	}
-	
-	ItemEspecifico(int codigo, String descricao, int quantidade){
-		super(codigo, descricao, quantidade);
-		this.comprimento = 0.0;
-		this.largura = 0.0;
-		this.espessura = 0.0;
-		this.cor = "Não definida";
-	}
-	
-	ItemEspecifico(int codigo, String descricao, int quantidade, double preco,
-				   double comprimento, double largura, double espessura, String cor){
-		super(codigo, descricao, quantidade, preco);
-		this.comprimento = comprimento;
-		this.largura = largura;
-		this.espessura = espessura;
-		this.cor = cor;
 	}
 	
 	public double getComprimento() {

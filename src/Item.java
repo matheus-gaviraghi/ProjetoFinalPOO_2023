@@ -2,7 +2,9 @@ import java.io.Serializable;
 
 public class Item implements Serializable {
 
-    protected int codigo;
+	private static final long serialVersionUID = 2728188997394689930L;
+	
+	protected int codigo;
     protected String descricao;
     protected int quantidade;
     protected double preco;
@@ -12,22 +14,6 @@ public class Item implements Serializable {
         this.descricao = descricao;
         this.quantidade = 0;
         this.preco = 0.0;
-    }
-
-    Item(int codigo, String descricao, int quantidade){
-        this(codigo, descricao);
-        this.quantidade = quantidade;
-        this.preco = 0.0;
-    }
-
-    Item(String descricao, int quantidade){
-        this.descricao = descricao;
-        this.quantidade = quantidade;
-    }
-
-    Item(int codigo, String descricao, int quantidade, double preco){
-        this(codigo, descricao, quantidade);
-        this.preco = preco;
     }
 
     public void setCodigo(int codigo){
@@ -65,9 +51,9 @@ public class Item implements Serializable {
     public String toString(){
         String retorno;
 
-        retorno = "\nEste item possui as seguintes características: " +
-                "\nCodigo: " + codigo + "\nDescricao: " + descricao +
-                "\nQuantidade: " + quantidade + "\nPreco: " + preco;
+        retorno = "Este item possui as seguintes características: " +
+                "\nCódigo: " + codigo + "\nDescrição: " + descricao +
+                "\nQuantidade: " + quantidade + "\nPreço: " + preco;
 
         return retorno;
     }

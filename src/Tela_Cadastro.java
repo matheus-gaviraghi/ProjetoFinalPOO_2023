@@ -21,21 +21,15 @@ import javax.swing.SwingConstants;
 import java.awt.Color;
 
 import javax.swing.JButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JTextField;
 import javax.swing.JCheckBox;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
 
 public class Tela_Cadastro extends JFrame {
 
+	private static final long serialVersionUID = 1412749792496420137L;
+	
 	private JPanel contentPane;
 	private JTextField textField_Descricao;
 	private JTextField textField_Quantidade;
@@ -242,9 +236,8 @@ public class Tela_Cadastro extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(verificarSeCamposBasicosForamPreenchidos() == false) {
-					JOptionPane.showMessageDialog(null, "Você deve preencher o campo de descrição!");
+					JOptionPane.showMessageDialog(null, "Você deve preencher o campo de descrição!", "Campo não preenchido", JOptionPane.ERROR_MESSAGE);
 				} else {
-					// aqui faz chamada de inserir item
 					inserirItemLista();
 				}
 			}
@@ -312,43 +305,86 @@ public class Tela_Cadastro extends JFrame {
     	if(lista.isEmpty()){
             codigoItem = 1;
         } else {
-        	codigoItem = lista.get(lista.size()-1).codigo;
+        	codigoItem = lista.get(lista.size()-1).codigo + 1;
         }
     	
     	
-    	verificarPreenchimentoCorretoDosCampos(checkboxSelecionado);
-//    	
-//    	// pega o conteudo inserido nos campos
-//    	String conteudoDescricao = textField_Descricao.getText();
-//    	String conteudoQuantidade = textField_Quantidade.getText();
-//    	String conteudoPreco = textField_Preco.getText();
-//    	
-//    	// verifica qual tipo de objeto deve ser criado e realiza a criação
-//    	if(checkboxSelecionado) { // O item é do tipo ItemEspecifico
-//    		
-//    		
-//    	} else { // O item é do tipo Item
-//    		if(conteudoDescricao.length()!= 0 && conteudoQuantidade.length()!= 0 && conteudoPreco.length()!= 0) {
-//    			Item novoItem = new Item(codigoItem, conteudoDescricao, Integer.valueOf(conteudoQuantidade),Double.valueOf(conteudoPreco));
-//    		} else if(conteudoDescricao.length()!= 0 && conteudoQuantidade.length()!= 0 && conteudoPreco.length()!= 0){
-//    			
-//    		}
-//    	}
-//    	
-//    	
-////    	
-////    	Item novoItem = new Item(0,"Teste Novo Item", 10, 30);
-////        
-////    	novoItem.setCodigo(codigoPrimeiroItem);
-////        lista.add(novoItem);
-////        salvarArquivoTemporario(lista);
-//
-//        
+    	if(verificarPreenchimentoCorretoDosCampos(checkboxSelecionado) == true) {
+    		// pega o conteudo inserido nos campos
+        	String conteudoDescricao = textField_Descricao.getText().trim();
+        	String conteudoQuantidade = textField_Quantidade.getText().trim();
+        	String conteudoPreco = textField_Preco.getText().trim();
+        	
+        	// verifica qual tipo de objeto deve ser criado e realiza a criação
+        	if(checkboxSelecionado == false) { // O item é do tipo Item
+        		
+        		Item novoItem = new Item(codigoItem, conteudoDescricao);
+        		
+        		if(!conteudoQuantidade.equals("")) { // se o campo Quantidade foi preenchido
+        			Integer quantidade = Integer.valueOf(conteudoQuantidade);
+        			novoItem.setQuantidade(quantidade);
+        		}
+        		
+        		if(!conteudoPreco.equals("")) { // se o campo Preço foi preenchido
+        			Double preco = Double.valueOf(conteudoPreco);
+        			novoItem.setPreco(preco);
+        		}
+        		
+        		// adicionando o novo item a lista de itens
+            	lista.add(novoItem);
+            	salvarArquivoTemporario(lista);
+        		
+        	} else { // O item é do tipo ItemEspecifico
+        		
+        		ItemEspecifico novoItem = new ItemEspecifico(codigoItem, conteudoDescricao);
+        		
+        		if(!conteudoQuantidade.equals("")) { // se o campo Quantidade foi preenchido
+        			Integer quantidade = Integer.valueOf(conteudoQuantidade);
+        			novoItem.setQuantidade(quantidade);
+        		}
+        		
+        		if(!conteudoPreco.equals("")) { // se o campo Preço foi preenchido
+        			Double preco = Double.valueOf(conteudoPreco);
+        			novoItem.setPreco(preco);
+        		}
+        		
+        		// pega o conteudo inserido nos campos extras
+            	String conteudoComprimento = textField_Comprimento.getText().trim();
+            	String conteudoEspessura = textField_Espessura.getText().trim();
+            	String conteudoLargura = textField_Largura.getText().trim();
+            	String conteudoCor = textField_Cor.getText().trim();
+        		
+            	if(!conteudoComprimento.equals("")) { // se o campo Comprimento foi preenchido
+            		Double comprimento = Double.valueOf(conteudoComprimento);
+        			novoItem.setComprimento(comprimento);
+        		}
+        		
+            	if(!conteudoEspessura.equals("")) { // se o campo Espessura foi preenchido
+            		Double espessura = Double.valueOf(conteudoEspessura);
+        			novoItem.setEspessura(espessura);
+        		}
+            	
+            	if(!conteudoLargura.equals("")) { // se o campo Largura foi preenchido
+            		Double largura = Double.valueOf(conteudoLargura);
+        			novoItem.setLargura(largura);
+        		}
+        		
+            	if(!conteudoCor.equals("")) { // se o campo Cor foi preenchido
+        			novoItem.setCor(conteudoCor);
+        		}
+            	
+            	// adicionando o novo item a lista de itens
+            	lista.add(novoItem);
+            	salvarArquivoTemporario(lista);
+        	}
+        	
+        	JOptionPane.showMessageDialog(null, "Item cadastrado com sucesso!", "Cadastro de novo item", JOptionPane.INFORMATION_MESSAGE);
+        	dispose(); // fecha a tela de cadastro
+			Tela_Aplicacao telaInicial = new Tela_Aplicacao();
+			telaInicial.setVisible(true); // torna a tela de inicio visível
+    	} 
     }
-    
-    
-    
-    
+
     
     public boolean verificarSeCamposBasicosForamPreenchidos() {
     	
@@ -367,6 +403,7 @@ public class Tela_Cadastro extends JFrame {
     	// campos que devem ser verificados são aqueles que envolvem números (não pode ser texto)
     	
     	JTextField[] arrayDeCampos;
+    	
     	if(checkBoxSelecionado == false){
     		arrayDeCampos = new JTextField[2];
     		arrayDeCampos[0] = textField_Quantidade;
@@ -392,6 +429,21 @@ public class Tela_Cadastro extends JFrame {
     				}
     			}
     		} catch (Exception e){
+    			String[] nomeCampos = null;
+    			if(arrayDeCampos.length == 2) {
+    				nomeCampos = new String[2];
+    				nomeCampos[0] = "Quantidade"; 
+    	    		nomeCampos[1] = "Preço";
+    			} else if (arrayDeCampos.length == 5){  
+    				nomeCampos = new String[5];
+    				nomeCampos[0] = "Quantidade"; 
+    	    		nomeCampos[1] = "Preço";
+    	    		nomeCampos[2] = "Comprimento"; 
+    	    		nomeCampos[3] = "Largura";
+    	    		nomeCampos[4] = "Espessura";
+    			}
+    			
+    			JOptionPane.showMessageDialog(null, "O campo " + nomeCampos[indice] + " foi preenchido incorretamente!", "Erro de preenchimento de campo", JOptionPane.ERROR_MESSAGE);
     			System.err.println("Erro de conversao de campos: " + e);
     			System.err.println("Campo que provocou o erro: " + indice);
     			return false;
