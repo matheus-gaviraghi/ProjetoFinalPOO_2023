@@ -7,10 +7,18 @@ public class ItemEspecifico extends Item implements Serializable {
 	
 	ItemEspecifico(int codigo, String descricao){
 		super(codigo, descricao);
+		this.comprimento = 0.0;
+		this.largura = 0.0;
+		this.espessura = 0.0;
+		this.cor = "Não definida";
 	}
 	
 	ItemEspecifico(int codigo, String descricao, int quantidade){
 		super(codigo, descricao, quantidade);
+		this.comprimento = 0.0;
+		this.largura = 0.0;
+		this.espessura = 0.0;
+		this.cor = "Não definida";
 	}
 	
 	ItemEspecifico(int codigo, String descricao, int quantidade, double preco,

@@ -10,11 +10,14 @@ public class Item implements Serializable {
     Item(int codigo, String descricao){
         this.codigo = codigo;
         this.descricao = descricao;
+        this.quantidade = 0;
+        this.preco = 0.0;
     }
 
     Item(int codigo, String descricao, int quantidade){
         this(codigo, descricao);
         this.quantidade = quantidade;
+        this.preco = 0.0;
     }
 
     Item(String descricao, int quantidade){

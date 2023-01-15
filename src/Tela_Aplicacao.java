@@ -5,7 +5,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import java.io.FileInputStream;
@@ -17,7 +16,9 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import javax.swing.SwingConstants;
+
 import java.awt.Color;
+
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -25,8 +26,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.JInternalFrame;
-import javax.swing.JDesktopPane;
 
 public class Tela_Aplicacao extends JFrame {
 
@@ -63,6 +62,7 @@ public class Tela_Aplicacao extends JFrame {
 		setSize(1042, 709);
 		setLocationRelativeTo(null); // permite centralizar o Frame na tela do usuário
 		
+		
 		// definição de um JPanel para inserir os elementos
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -80,7 +80,9 @@ public class Tela_Aplicacao extends JFrame {
 		JButton buttonCadastrarItem = new JButton("Cadastrar Item");
 		buttonCadastrarItem.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				telaCadastrarItem();
+				dispose(); // fecha a tela principal
+				Tela_Cadastro telaCadastro = new Tela_Cadastro();
+				telaCadastro.setVisible(true); // torna a tela de cadastro visível
 			}
 		});
 		buttonCadastrarItem.setForeground(Color.WHITE);
@@ -117,22 +119,9 @@ public class Tela_Aplicacao extends JFrame {
 		
 		tabelaItens = new JTable();
 		tabelaItens.setEnabled(false);
-		tabelaItens.setModel(new DefaultTableModel(
-			mostrarItensEstoque(), // chamada do método para retorno dos dados
-			new String[] {
-				"C\u00F3digo", "Descri\u00E7\u00E3o", "Quantidade", "Pre\u00E7o (unid)", "Comprimento (cm)", "Largura (cm)", "Espessura (cm)", "Cor"
-			}
-		));
-		tabelaItens.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		// definição da largura do nome das colunas da tabela
-		tabelaItens.getColumnModel().getColumn(0).setPreferredWidth(8);
-		tabelaItens.getColumnModel().getColumn(1).setPreferredWidth(140);
-		tabelaItens.getColumnModel().getColumn(2).setPreferredWidth(40);
-		tabelaItens.getColumnModel().getColumn(3).setPreferredWidth(40);
-		tabelaItens.getColumnModel().getColumn(4).setPreferredWidth(80);
-		tabelaItens.getColumnModel().getColumn(5).setPreferredWidth(50);
-		tabelaItens.getColumnModel().getColumn(6).setPreferredWidth(60);
-		tabelaItens.getTableHeader().setResizingAllowed(false);
+		
+		refreshTabela(); // construção da tabela com dados já existentes
+		
 		// centralizando dados das colunas
 		DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) tabelaItens.getDefaultRenderer(Object.class);
 	    renderer.setHorizontalAlignment(SwingConstants.CENTER);
@@ -148,16 +137,17 @@ public class Tela_Aplicacao extends JFrame {
 					"C\u00F3digo", "Descri\u00E7\u00E3o", "Quantidade", "Pre\u00E7o (unid)", "Comprimento (cm)", "Largura (cm)", "Espessura (cm)", "Cor"
 				}
 		));
+		tabelaItens.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		// definição da largura do nome das colunas da tabela
+		tabelaItens.getColumnModel().getColumn(0).setPreferredWidth(8);
+		tabelaItens.getColumnModel().getColumn(1).setPreferredWidth(140);
+		tabelaItens.getColumnModel().getColumn(2).setPreferredWidth(40);
+		tabelaItens.getColumnModel().getColumn(3).setPreferredWidth(40);
+		tabelaItens.getColumnModel().getColumn(4).setPreferredWidth(80);
+		tabelaItens.getColumnModel().getColumn(5).setPreferredWidth(50);
+		tabelaItens.getColumnModel().getColumn(6).setPreferredWidth(60);
+		tabelaItens.getTableHeader().setResizingAllowed(false);
 	}
-	
-	public void telaCadastrarItem(){
-		DefaultTableModel model = (DefaultTableModel) tabelaItens.getModel();
-		model.setRowCount(0);
-		inserirItem();
-		refreshTabela();
-	}
-	
-	
 	
 	// IMPLEMENTAÇÃO DOS MÉTODOS A SEREM UTILIZADOS NA APLICAÇÃO
 	
@@ -212,41 +202,4 @@ public class Tela_Aplicacao extends JFrame {
         return new ArrayList<Item>();
     }
 	
-	
-	
-	public static void salvarArquivoTemporario(ArrayList<Item> lista){
-        try{
-            FileOutputStream fileOut = new FileOutputStream("lista.tmp");
-            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
-            objectOut.writeObject(lista);
-            objectOut.close();
-        } catch (FileNotFoundException e){
-            System.err.println("Arquivo não pode ser criado!");
-            e.printStackTrace();
-        } catch (IOException e){
-            System.err.println("Erro I/O!");
-            e.printStackTrace();
-        }
-        System.out.println("Arquivo salvo com sucesso!");
-    }
-	
-	
-
-    public static void inserirItem(){
-    	
-    	Item novoItem = new Item(0,"Teste Novo Item", 10, 30);
-        ArrayList<Item> lista = lerArquivoTemporario();
-
-        if(lista.isEmpty()){
-            int codigoPrimeiroItem = 1;
-            novoItem.setCodigo(codigoPrimeiroItem);
-            lista.add(novoItem);
-            salvarArquivoTemporario(lista);
-        } else {
-            int ultimoCodigo = lista.get(lista.size()-1).codigo;
-            novoItem.setCodigo(ultimoCodigo+1);
-            lista.add(novoItem);
-            salvarArquivoTemporario(lista);
-        }
-    }
 }
