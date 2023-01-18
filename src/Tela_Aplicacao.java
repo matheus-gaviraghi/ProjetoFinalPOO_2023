@@ -112,6 +112,13 @@ public class Tela_Aplicacao extends JFrame {
 		
 		// definição do botão para excluir um determinado item
 		JButton buttonExcluirItem = new JButton("Excluir Item");
+		buttonExcluirItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose(); // fecha a tela principal
+				Tela_ExcluirItem telaExcluir = new Tela_ExcluirItem();
+				telaExcluir.setVisible(true); // torna a tela de excluir visível
+			}
+		});
 		buttonExcluirItem.setForeground(Color.WHITE);
 		buttonExcluirItem.setFont(new Font("Times New Roman", Font.PLAIN, 16));
 		buttonExcluirItem.setBackground(Color.GRAY);

@@ -3,6 +3,8 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -25,6 +27,7 @@ public class Tela_ExcluirItem extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField_Codigo;
+	private int codigoItemBuscado;
 
 	/**
 	 * Launch the application.
@@ -70,7 +73,7 @@ public class Tela_ExcluirItem extends JFrame {
 		tituloMenu.setBounds(0, 38, 1028, 67);
 		contentPane.add(tituloMenu);
 		
-		JLabel labelPedirCodigo = new JLabel("Digite o código do item a ser excluido:");
+		JLabel labelPedirCodigo = new JLabel("Digite o código do item a ser excluído:");
 		labelPedirCodigo.setFont(new Font("Times New Roman", Font.BOLD, 18));
 		labelPedirCodigo.setBounds(73, 142, 307, 21);
 		contentPane.add(labelPedirCodigo);
@@ -90,21 +93,49 @@ public class Tela_ExcluirItem extends JFrame {
 		contentPane.add(textPane_InfosItem);
 		
 		
+		JButton buttonExcluirItem = new JButton("Excluir Item");
+		buttonExcluirItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Item itemBuscado = buscarItem(codigoItemBuscado);
+					
+					int confirmaExclusao = JOptionPane.showConfirmDialog(null, "Você tem certeza que deseja excluir este item?", "Excluir item", JOptionPane.YES_NO_OPTION);
+					
+					if(confirmaExclusao == JOptionPane.YES_OPTION) {
+						excluirItemLista(itemBuscado.getCodigo());
+					}
+					
+				
+				} catch(Exception erro) {
+					JOptionPane.showMessageDialog(null, "Não foi possível excluir! Deixe o campo de pesquisa do código preenchido e tente novamente!", "Erro na exclusão do item!", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		buttonExcluirItem.setForeground(Color.WHITE);
+		buttonExcluirItem.setFont(new Font("Times New Roman", Font.PLAIN, 16));
+		buttonExcluirItem.setBackground(Color.GRAY);
+		buttonExcluirItem.setBounds(851, 576, 129, 70);
+		buttonExcluirItem.setVisible(false);
+		contentPane.add(buttonExcluirItem);
+		
+		
 		JButton buttonBuscarItem = new JButton("Pesquisar Item");
 		buttonBuscarItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 								
 				try {
 					if(!textField_Codigo.getText().trim().equals("")) {
-						Item itemBuscado = buscarItem(Integer.valueOf(textField_Codigo.getText().trim()));
+						codigoItemBuscado = Integer.valueOf(textField_Codigo.getText().trim());
+						Item itemBuscado = buscarItem(codigoItemBuscado);
 						
 						textPane_InfosItem.setVisible(true);
 						textPane_InfosItem.setText(itemBuscado.toString());
-						
+						buttonExcluirItem.setVisible(true);
 					}
 					
 				} catch(Exception erro) {
 					textPane_InfosItem.setVisible(false);
+					buttonExcluirItem.setVisible(false);
 					JOptionPane.showMessageDialog(null, erro, "Erro de busca de item", JOptionPane.ERROR_MESSAGE);
 				}
 			}
@@ -120,14 +151,16 @@ public class Tela_ExcluirItem extends JFrame {
 		buttonCancelar.setFont(new Font("Times New Roman", Font.PLAIN, 16));
 		buttonCancelar.setBackground(Color.GRAY);
 		buttonCancelar.setBounds(73, 576, 129, 70);
+		buttonCancelar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				dispose(); // fecha a tela de exclusão
+				Tela_Aplicacao telaInicial = new Tela_Aplicacao();
+				telaInicial.setVisible(true); // torna a tela inical visível
+			}
+		});
 		contentPane.add(buttonCancelar);
 		
-		JButton buttonExcluirItem = new JButton("Excluir Item");
-		buttonExcluirItem.setForeground(Color.WHITE);
-		buttonExcluirItem.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-		buttonExcluirItem.setBackground(Color.GRAY);
-		buttonExcluirItem.setBounds(851, 576, 129, 70);
-		contentPane.add(buttonExcluirItem);
 	}
 	
 	
@@ -195,7 +228,14 @@ public class Tela_ExcluirItem extends JFrame {
 			}
 		}
 		
-		Item itemBuscado = lista.get(posicaoObjetoLista);
+		lista.remove(posicaoObjetoLista); // remove o item da lista
+		
+		salvarArquivoTemporario(lista);
+		
+		JOptionPane.showMessageDialog(null, "Item excluído com sucesso!", "Exclusão de item", JOptionPane.INFORMATION_MESSAGE);
+    	dispose(); // fecha a tela de excluir
+		Tela_Aplicacao telaInicial = new Tela_Aplicacao();
+		telaInicial.setVisible(true); // torna a tela de inicio visível
 	}
 
 }

@@ -36,6 +36,8 @@ public class Tela_EditarItem extends JFrame {
 	private JTextField textField_Cor;
 	private JTextField textField_Largura;
 	private JTextField textField_Espessura;
+	
+	private int codigoItemBuscado;
 
 	private boolean itemTipoEspecifico;
 	/**
@@ -209,11 +211,11 @@ public class Tela_EditarItem extends JFrame {
 				} else {
 					
 					try {
-						Item itemBuscado = buscarItem(Integer.valueOf(textField_CodigoItem.getText().trim()));
+						Item itemBuscado = buscarItem(codigoItemBuscado);
 						editarItemLista(itemBuscado.getCodigo());
 					
 					} catch(Exception erro) {
-						// do nothing
+						JOptionPane.showMessageDialog(null, "Não foi possível editar! Deixe o campo de pesquisa do código preenchido e tente novamente!", "Erro na edição do item!", JOptionPane.ERROR_MESSAGE);
 					}
 					
 				}
@@ -245,8 +247,10 @@ public class Tela_EditarItem extends JFrame {
 				try {
 					
 					if(!textField_CodigoItem.getText().trim().equals("")) {
-						Item itemBuscado = buscarItem(Integer.valueOf(textField_CodigoItem.getText().trim()));
+						codigoItemBuscado = Integer.valueOf(textField_CodigoItem.getText().trim());
+						Item itemBuscado = buscarItem(codigoItemBuscado);
 						
+	
 						textPane_InfosItem.setVisible(true);
 						textPane_InfosItem.setText(itemBuscado.toString());
 						
@@ -439,7 +443,7 @@ public class Tela_EditarItem extends JFrame {
             salvarArquivoTemporario(lista);
             
             JOptionPane.showMessageDialog(null, "Item editado com sucesso!", "Edição de um item", JOptionPane.INFORMATION_MESSAGE);
-        	dispose(); // fecha a tela de cadastro
+        	dispose(); // fecha a tela de edição
 			Tela_Aplicacao telaInicial = new Tela_Aplicacao();
 			telaInicial.setVisible(true); // torna a tela de inicio visível
 			
